@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            img{
+                width: 20px;
+                height: 20px;
+            }
+
+            #life{
+                width: 240px;
+                height: 20px;
+            }
+
+            #life_green{
+                width: 100%;
+                height: 20px;
+                background-color: yellowgreen;
+                display: inline-block;
+            }
+
+            #life_red{
+                width: 0%;
+                height: 20px;
+                background-color: red;
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="screen" width="740" height="740" style="display: inline-block; vertical-align: top;" >unsupported</canvas>
+        <script src="q.js"></script>
+        <script>
+            var ctl = new ctrl();
+            ctl.start();
+
+        </script>
+        <div style="display: inline-block; vertical-align: top;">
+            <div style="text-align: center; color: #FF0000; font-size: 40px; margin: 10px;">強化学習</div>
+            <div style="text-align: center; margin-top: 20px; margin-bottom: 20px;">何回も試行錯誤していくとそのうちいい感じのルートを自力で学習します</div>
+            <div><span>episode:</span><span id="episode">0</span></div>
+            <div><span>step:</span><span id="step">0</span></div>
+            <div><span>HP:</span><span id="hp">?</span>(前episodeのHP:<span id="lasthp">?</span>)</div>
+            <div id="life"><div id="life_green"></div><div id="life_red"></div></div>
+            <div><span>学習率:</span><span id="learning_rate_text"></span><br><input type="range" id="learning_rate" min="0" max="1" step="0.05" onchange="learn_change()" oninput="learn_slide()" value="0.1"></div>
+            <div><span>割引率</span><span id="discount_rate_text"></span><br><input type="range" id="discount_rate" min="0" max="1" step="0.01" onchange="discount_change()" oninput="discount_slide()" value="0.9"></div>
+            <!--
+            <div>
+                <span>行動アルゴリズム</span>
+                <select id="select_algorithm">
+                    <option value="0">ε-greety</option>
+                    <option value="1">ルーレット</option>
+                </select>
+            </div>
+            -->
+            <div><span>適当に行動する確率</span><span id="random_rate_text"></span><br><input type="range" id="random_rate" min="0" max="1" step="0.01" onchange="random_change()" oninput="random_slide()" value="0.1"></div>
+            <div><span>フレームレート</span><span id="frame_rate_text"></span><br><input type="range" id="frame_rate" min="1" max="240" step="1" onchange="frame_change()" oninput="frame_slide()" value="1"></div>
+            <div><label>マッハモード<input id="quick_mode" type="checkbox" onClick="quickmode_change()"></label></div>
+            <div>
+                <img src="image/2.png"><span>:平地(移動コスト:1)</span><br>
+                <img src="image/4.png"><span>:毒沼(移動コスト:10)</span>
+            </div>
+            <div><button onClick="reset_ql()">リセット</button></div>
+            <script>
+                function learn_change() {
+                    ctl.ql.learningRate = parseFloat(document.getElementById("learning_rate").value);
+                }
+
+                function learn_slide() {
+                    document.getElementById("learning_rate_text").innerText = document.getElementById("learning_rate").value;
+                    learn_change();
+                }
+
+                function discount_change() {
+                    ctl.ql.discountRate = parseFloat(document.getElementById("discount_rate").value);
+                }
+
+                function discount_slide() {
+                    document.getElementById("discount_rate_text").innerText = document.getElementById("discount_rate").value;
+                    discount_change();
+                }
+
+                function frame_change() {
+                    var frame_rate = parseFloat(document.getElementById("frame_rate").value);
+                    ctl.changeFrameRate(frame_rate);
+                }
+
+                function frame_slide() {
+                    document.getElementById("frame_rate_text").innerText = document.getElementById("frame_rate").value;
+                    frame_change();
+                }
+
+                function frame_skip_change() {
+                    document.getElementById("frame_skip_rate");
+                }
+
+                function frame_skip_slide() {
+                    document.getElementById("frame_skip_rate_text").innerText = document.getElementById("frame_skip_rate").innerText;
+                    frame_skip_change();
+                }
+
+                function random_change() {
+                    ctl.ql.randomRate = parseFloat(document.getElementById("random_rate").value);
+                }
+
+                function random_slide() {
+                    document.getElementById("random_rate_text").innerText = document.getElementById("random_rate").value;
+                    random_change();
+                }
+
+                function quickmode_change() {
+                    ctl.changeQuickMode(document.getElementById("quick_mode").checked);
+                }
+
+                function reset_ql() {
+                    ctl.dr.drawBox(ctl.map, ctl.ql.state.x, ctl.ql.state.y);
+                    ctl.ql.init();
+                }
+
+
+                learn_slide();
+                discount_slide();
+                frame_slide();
+                //frame_skip_slide();
+                random_slide();
+
+            </script>
+        </div>
+    </body>
+</html>
