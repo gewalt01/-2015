@@ -5,5 +5,5 @@ Q関数が配列です。Q関数がニューラルネットワークではあり
 古典的な奴です。
 
 Demo \
-https://gewalt01.github.io/Reinforcement-learning-OC2015/
+https://gewalt01.github.io/Reinforcement-learning-OC2015/ \
 表示されないときは数回リロードするのだ。
